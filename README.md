@@ -1,0 +1,2 @@
+# aditex
+automatic dependency injector()
