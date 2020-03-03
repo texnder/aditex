@@ -10,7 +10,7 @@
         }
     ],
     "require-dev": {
-        "texnder/bootex": "~1.0"
+        "texnder/bootex": "^1.0"
     },
     "autoload": {
         "psr-4": {
