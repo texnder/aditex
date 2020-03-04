@@ -1,6 +1,7 @@
 {
 	"name": "texnder/aditex",
     "description": "automatic dependency injector integration for PHP projects",
+    "type": "library",
     "keywords": ["aditex", "dependency autowiring", "dependency injector", "autowiring"],
     "license": "MIT",
     "authors": [
@@ -10,7 +11,7 @@
         }
     ],
     "require": {
-        "texnder/bootex": "^1.0"
+        "texnder/bootex": "^1.0.*"
     },
     "autoload": {
         "psr-4": {
