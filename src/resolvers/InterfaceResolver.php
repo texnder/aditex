@@ -18,6 +18,9 @@ namespace aditex\src\resolvers;
  */
 class InterfaceResolver
 {
+
+	const mapper = __DIR__. "/../..". "/mapper.php";
+
 	/**
 	 * interface mapped array..
 	 *
@@ -69,8 +72,8 @@ class InterfaceResolver
 	 */
 	private function getMapperPath()
 	{
-		$configArry = include __dir__. "/../../config/ADI.php";
-		return $configArry['mapper'];
+		$configArry = include self::mapper;
+		return $configArry;
 	}
 
 	/**
@@ -80,17 +83,6 @@ class InterfaceResolver
 	 */
 	private function setEnteries($mapper)
 	{
-		if (!$mapper) {
-			throw new \Exception("mapper file path not specified!!");
-		}
-
-		if (file_exists($mapper)) {
-
-			$this->ResolverEntries = include $mapper;
-			return;
-
-		}else
-			throw new \Exception("'{$mapper}' failed to open dir: No such file or directory");
-
+		$this->ResolverEntries = $mapper;
 	}
 }

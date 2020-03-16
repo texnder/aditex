@@ -189,18 +189,11 @@ class Container
 	 */
 	private function has(string $name)
 	{
-		$configPsr4 = $this->configuration();
-
-		$container = $this->psr4Container($configPsr4);
-
-		foreach ($container->services as $service) {
-			
-			if (!substr_compare($service,$name,-strlen($name),strlen($name))) {
-				return $service;
-			}
+		if ($fullName = $this->checkNameIsExist($name)) {
+			return $fullName;
 		}
-
-		return $this->checkNameIsClass($name);
+		
+		throw new ServiceNotFoundException('service not found: ' . $name);
 	}
 
 	/**
@@ -294,14 +287,6 @@ class Container
 
 
 	/**
-	 * get config parameters 
-	 */
-	private function configuration()
-	{
-		return __dir__."/../config/ADI.php";
-	}
-
-	/**
 	 * to delete stored object call this function
 	 *
 	 * @param 	any
@@ -340,12 +325,10 @@ class Container
 	 * 
 	 * @param 	string 	$name
 	 */
-	private function checkNameIsClass($name)
+	private function checkNameIsExist($name)
 	{
-		if (class_exists($name)) {
+		if (class_exists($name) || interface_exists($name) || trait_exists($name)) {
 			return $name;
-		}else{
-			throw new ServiceNotFoundException('service not found: ' . $name);
 		}
 	}
 
@@ -383,18 +366,6 @@ class Container
 		// return new constructed array if constructed successfully..
 		return $new_arry ? $new_arry : $argsValue;
 	}
-
-
-	/**
-	 * return service container
-	 *
-	 * @param 	array 	$psr4
-	 */
-	private function psr4Container($psr4)
-	{
-		return new services($psr4);
-	}
-
 
 	/**
 	 * remove stored object
