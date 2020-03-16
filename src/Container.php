@@ -189,11 +189,7 @@ class Container
 	 */
 	private function has(string $name)
 	{
-		if ($fullName = $this->checkNameIsExist($name)) {
-			return $fullName;
-		}
-		
-		throw new ServiceNotFoundException('service not found: ' . $name);
+		return $this->checkServiceIfExist($name);
 	}
 
 	/**
@@ -325,11 +321,12 @@ class Container
 	 * 
 	 * @param 	string 	$name
 	 */
-	private function checkNameIsExist($name)
+	private function checkServiceIfExist($name)
 	{
 		if (class_exists($name) || interface_exists($name) || trait_exists($name)) {
 			return $name;
-		}
+		}else	
+			throw new ServiceNotFoundException('service not found: ' . $name);
 	}
 
 	/**
