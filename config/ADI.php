@@ -27,7 +27,7 @@ return [
 
 	 "psr4" => [
 
-	 		"aditex\\src\\" => __DIR__."/../src"
+	 		"aditex\\src" => __DIR__."/../src"
 
 	 ]
 ];
