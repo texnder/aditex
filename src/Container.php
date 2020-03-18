@@ -65,7 +65,7 @@ class Container
 	 *
 	 * @return 	service class object
 	 */
-	public function call(string $objName, array $argsValue = [])
+	public function create(string $objName, array $argsValue = [])
 	{
 		$this->method = "__construct";
 		
