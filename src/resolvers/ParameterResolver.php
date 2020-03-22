@@ -1,10 +1,10 @@
 <?php
 
-namespace aditex\src\resolvers;
+namespace Aditex\src\resolvers;
 
-use aditex\src\exception\ParameterNotFoundException;
-use aditex\src\exception\BindingResolutionException;
-use aditex\src\resolvers\InterfaceResolver;
+use Aditex\src\exception\ParameterNotFoundException;
+use Aditex\src\exception\BindingResolutionException;
+use Aditex\src\resolvers\InterfaceResolver;
 
 /**
  * parameter Resolver class is used to 

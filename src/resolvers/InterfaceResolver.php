@@ -1,6 +1,6 @@
 <?php
 
-namespace aditex\src\resolvers;
+namespace Aditex\src\resolvers;
 
 /**
  * this is name resolver class, which resolves

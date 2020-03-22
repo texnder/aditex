@@ -1,8 +1,8 @@
 <?php
 
-namespace aditex\src;
+namespace Aditex\src;
 
-use aditex\src\exception\BindingResolutionException;
+use Aditex\src\exception\BindingResolutionException;
 
 /**
  * Automatic dependency injector

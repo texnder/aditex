@@ -1,6 +1,6 @@
 <?php
 
-namespace aditex\src\exception;
+namespace Aditex\src\exception;
 
 use \ReflectionException;
 

@@ -13,7 +13,7 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "aditex\\src\\": "src"
+            "Aditex\\src\\": "src"
         }
     }
 }

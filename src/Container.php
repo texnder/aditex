@@ -1,11 +1,11 @@
 <?php
 
-namespace aditex\src;
+namespace Aditex\src;
 
 use bootex\services;
-use aditex\src\AutoDependencyInjector;
-use aditex\src\resolvers\ParameterResolver;
-use aditex\src\exception\ServiceNotFoundException;
+use Aditex\src\AutoDependencyInjector;
+use Aditex\src\resolvers\ParameterResolver;
+use Aditex\src\exception\ServiceNotFoundException;
 
 
 class Container 
