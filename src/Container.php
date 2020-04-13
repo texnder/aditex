@@ -29,7 +29,7 @@ class Container
      *
      * @var array
      */
-	public $storedObj = [];
+	public $calledObj = [];
 
 	/**
      * boolen to store all neccessary dependencies..
@@ -38,6 +38,13 @@ class Container
      * @var string
      */
     public $storeAllDependencies = false;
+
+    /**
+     * store all dependencies for future use
+     *
+     * @var array
+     */
+    public static $storedServices = [];
 
 	/**
 	 * return class Object if exist
@@ -50,9 +57,13 @@ class Container
 		
 		$objName = $this->has($objName);
 		
-		if (array_key_exists($objName, $this->storedObj)) {
+		if (array_key_exists($objName, $this->calledObj)) {
 
-			return $this->storedObj[$objName];
+			return $this->calledObj[$objName];
+
+		}elseif (array_key_exists($objName, static::$storedServices)) {
+
+			return static::$storedServices[$objName];
 		}
 	}
 	
@@ -72,8 +83,12 @@ class Container
 		$ObjectName = $this->has($objName);
 
 		$this->service = $ObjectName;
+
+		if (isset(static::$storedServices[$ObjectName])) {
+			$this->calledObj[$ObjectName] = static::$storedServices[$ObjectName];
+		}
 		 
-        if (!isset($this->storedObj[$ObjectName])) {
+        if (!isset($this->calledObj[$ObjectName])) {
             $this->make($ObjectName,$argsValue);
         }
         
@@ -97,7 +112,7 @@ class Container
 	        $paramArray = $this->storeMethodDependencies($argsValue);
 	        
 			return call_user_func_array([
-				$this->storedObj[$this->service],
+				$this->calledObj[$this->service],
 				$this->method
 			],$paramArray);
 		}
@@ -134,6 +149,7 @@ class Container
 
 		$createdObj = $autoDI->createAll($parameters,$argsValue);
 
+		$this->storeStaticObj($createdObj, $argsValue);
 
 		if ($this->storeAllDependencies) {
 			
@@ -142,8 +158,9 @@ class Container
 		}else{
 			
 			if (array_key_exists($this->service, $createdObj)) {
-				$this->storedObj[$this->service] = $createdObj[$this->service];
+				$this->calledObj[$this->service] = $createdObj[$this->service];
 			}
+
 		}	
 	}
 
@@ -206,9 +223,9 @@ class Container
 
 			return $this->isExist($objName);
 
-		}elseif (isset($this->storedObj[$this->service])) {
+		}elseif (isset($this->calledObj[$this->service])) {
 
-			return $this->storedObj[$this->service];
+			return $this->calledObj[$this->service];
 
 		}
 	}
@@ -259,10 +276,10 @@ class Container
 
 					
 		    		if (!is_null($type)) {
-		    			if (isset($this->storedObj[$type])) {
+		    			if (isset($this->calledObj[$type])) {
 
-		    				$argArray[$arg] = $this->storedObj[$type];
-		    				unset($this->storedObj[$type]);
+		    				$argArray[$arg] = $this->calledObj[$type];
+		    				unset($this->calledObj[$type]);
 
 		    				continue;
 
@@ -309,8 +326,8 @@ class Container
 	private function storeAll($createdObj)
 	{
 		foreach ($createdObj as $class => $classObj) {
-			if (!isset($this->storedObj[$class])) {
-				$this->storedObj[$class] = $classObj;
+			if (!isset($this->calledObj[$class])) {
+				$this->calledObj[$class] = $classObj;
 			}
 		}
 	}
@@ -327,6 +344,18 @@ class Container
 			return $name;
 		}else	
 			throw new ServiceNotFoundException('service not found: ' . $name);
+	}
+
+	
+	/**
+	 * get instance of object statically
+	 * 
+	 * @param 	string 	$objName
+	 */
+	public static function getInstance(string $objName)
+	{
+		$container = new self;
+		return $container->isExist($objName);
 	}
 
 	/**
@@ -371,10 +400,46 @@ class Container
 	 */
 	private function removeService($objName)
 	{
-		if (isset($this->storedObj[$objName])) {
-			unset($this->storedObj[$objName]);
+		if (isset($this->calledObj[$objName])) {
+			unset($this->calledObj[$objName]);
 		}
 	}
 
+	/**
+	 * call statically to create objectes
+	 *
+	 * @param 	string 	$objName
+	 * @param 	array 	$argsValue
+	 * @return 	self
+	 */
+	public static function call(string $objName, array $argsValue = [])
+	{
+		if (! isset(static::$storedServices[Container::class])) {
+			$container = new self;
+			static::$storedServices[Container::class] = $container;
+		}else{
+			$container = static::$storedServices[Container::class];
+		}
+		
+		$container->create($objName,$argsValue);
+
+		return $container;
+	}
+
+	/**
+	 * store all those objects which constructor does not have 
+	 * defaults or dynamic arguments
+	 * 
+	 * @param 	array 	$objects
+	 * @param 	array 	$exceptions
+	 */
+	private function storeStaticObj($objects, $exceptions)
+	{
+		foreach ($objects as $name => $obj) {
+			if (! array_key_exists($name, $exceptions)) {
+				static::$storedServices[$name] = $obj;
+			}
+		}
+	}
 
 }
