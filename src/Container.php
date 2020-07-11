@@ -2,7 +2,6 @@
 
 namespace Aditex\src;
 
-use bootex\services;
 use Aditex\src\AutoDependencyInjector;
 use Aditex\src\resolvers\ParameterResolver;
 use Aditex\src\exception\ServiceNotFoundException;
