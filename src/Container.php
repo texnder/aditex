@@ -63,6 +63,11 @@ class Container
 		}elseif (array_key_exists($objName, static::$storedServices)) {
 
 			return static::$storedServices[$objName];
+
+		}elseif (array_key_exists(Container::class, static::$storedServices)) {
+			
+			$container = static::$storedServices[Container::class];
+			return isset($container->calledObj[$objName]) ? $container->calledObj[$objName] : null;
 		}
 	}
 	
